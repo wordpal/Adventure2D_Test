@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public Animator anim;
     [HideInInspector] public PhysicsCheck physicsCheck;
 
-    [Header("»ù±¾ÊôĞÔ")]
+    [Header("åŸºæœ¬å±æ€§")]
     public float normalSpeed;
     public float chaseSpeed;
     [HideInInspector] public float currentSpeed;
@@ -22,20 +22,20 @@ public class Enemy : MonoBehaviour
     public Transform attacker;
     public Vector3 spwanPoint;
 
-    [Header("¼ì²âÍæ¼Ò")]
+    [Header("æ£€æµ‹ç©å®¶")]
     public Vector2 centerOffset;
     public Vector2 checksize;
     public float checkDistance;
     public LayerMask attackLayer;
 
-    [Header("¼ÆÊ±Æ÷")]
+    [Header("è®¡æ—¶å™¨")]
     public float waitTime;
     public float waitTimeCounter;
     public bool wait;
     public float lostTime;
     public float lostTimeCounter;
 
-    [Header("×´Ì¬")]
+    [Header("çŠ¶æ€")]
     public bool isHurt;
     public bool isDead;
 
@@ -51,21 +51,27 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         physicsCheck = GetComponent<PhysicsCheck>();
 
+        if (physicsCheck != null && !physicsCheck.enabled)
+            physicsCheck.enabled = true;
+
         currentSpeed = normalSpeed;
         //waitTimeCounter = waitTime;
         spwanPoint = transform.position;
     }
 
-    //µ±Õâ¸öÎïÌå±»¼¤»îµÃÊ±ºòÖ´ĞĞ
+    //å½“è¿™ä¸ªç‰©ä½“è¢«æ¿€æ´»å¾—æ—¶å€™æ‰§è¡Œ
     private void OnEnable()
     {
+        if (physicsCheck != null && !physicsCheck.enabled)
+            physicsCheck.enabled = true;
+
         currentState = patrolState;
         currentState.OnEnter(this);
     }
 
     private void Update()
     {
-        //³¯ÏòÓëscaleÏà·´
+        //æœå‘ä¸scaleç›¸å
         faceDir = new Vector3(-transform.localScale.x, 0, 0);
 
         currentState.LogicUpdate();
@@ -86,12 +92,12 @@ public class Enemy : MonoBehaviour
 
     public virtual void Move()
     {
-        if(!anim.GetCurrentAnimatorStateInfo(0).IsName("SnailPreMove")&&!anim.GetCurrentAnimatorStateInfo(0).IsName("SnailRecover"))//Ö»ÓĞSnailÓĞ
+        if(!anim.GetCurrentAnimatorStateInfo(0).IsName("SnailPreMove")&&!anim.GetCurrentAnimatorStateInfo(0).IsName("SnailRecover"))//åªæœ‰Snailæœ‰
             rb.velocity = new Vector2(currentSpeed * faceDir.x * Time.deltaTime, rb.velocity.y);
     }
 
     /// <summary>
-    /// ¼ÆÊıÆ÷
+    /// è®¡æ•°å™¨
     /// </summary>
     private void TimeCounter()
     {
@@ -120,51 +126,51 @@ public class Enemy : MonoBehaviour
     {
         var obj = Physics2D.BoxCast(transform.position + (Vector3)centerOffset, checksize, 0, faceDir, checkDistance, attackLayer);
         if (obj)
-            lostTimeCounter = lostTime; //´Ó×îºóÒ»´Î¶ªÊ§Ä¿±êµÄÊ±ºò¿ªÊ¼¼ÆÊ±
+            lostTimeCounter = lostTime; //ä»æœ€åä¸€æ¬¡ä¸¢å¤±ç›®æ ‡çš„æ—¶å€™å¼€å§‹è®¡æ—¶
         return obj;
     }
 
-    public virtual Vector3 GetNowPoint()    //Bee¸²Ğ´ÓÃ
+    public virtual Vector3 GetNowPoint()    //Beeè¦†å†™ç”¨
     {
         return transform.position;
     }
 
-    #region ÊÂ¼şÖ´ĞĞ·½·¨
+    #region äº‹ä»¶æ‰§è¡Œæ–¹æ³•
 
     public void OnTakeDamage(Transform attackTrans)
     {
         attacker = attackTrans;
-        if (attackTrans.position.x - transform.position.x > 0)  //¹¥»÷ÕßÔÚÓÒ±ß
+        if (attackTrans.position.x - transform.position.x > 0)  //æ”»å‡»è€…åœ¨å³è¾¹
         {
             transform.localScale = new Vector3(-1, 1, 1);
         }
-        if (attackTrans.position.x - transform.position.x < 0)  //¹¥»÷ÕßÔÚ×ó±ß
+        if (attackTrans.position.x - transform.position.x < 0)  //æ”»å‡»è€…åœ¨å·¦è¾¹
         {
             transform.localScale = new Vector3(1, 1, 1);
         }
         isHurt = true;
         anim.SetTrigger("hurt");
-        //ÊÜÉË±»»÷ÍË
+        //å—ä¼¤è¢«å‡»é€€
         rb.velocity = new Vector2(0, rb.velocity.y);
         Vector2 dir = new Vector2(transform.position.x - attackTrans.position.x, 0).normalized;
         StartCoroutine(OnHurt(dir));
     }
 
-    private IEnumerator OnHurt(Vector2 dir) //Ğ­Í¬³ÌĞò·µ»ØÖµ;µü´úÆ÷
+    private IEnumerator OnHurt(Vector2 dir) //ååŒç¨‹åºè¿”å›å€¼;è¿­ä»£å™¨
     {
         rb.AddForce(dir * hurtForce, ForceMode2D.Impulse);
         yield return new WaitForSeconds(0.45f);
-        isHurt = false;     //´ó¸ÅµÈ¶¯»­²¥·ÅÍêĞŞ¸ÄisHurt
+        isHurt = false;     //å¤§æ¦‚ç­‰åŠ¨ç”»æ’­æ”¾å®Œä¿®æ”¹isHurt
     }
 
-    public void OnDie()
+    public virtual void OnDie()
     {
         gameObject.layer = 2;
         anim.SetBool("dead", true);
         isDead = true;
     }
 
-    public void DestroyAfterAnimation()
+    public virtual void DestroyAfterAnimation()
     {
         Destroy(this.gameObject);
     }

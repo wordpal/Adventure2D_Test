@@ -1,8 +1,10 @@
 # 2DAdventure 项目说明（ProjectDocument）
 
-> 本文档根据 `Assets/Scripts` 下代码与注释整理，配合你提供的架构图（事件流/存档结构/看板）进行归纳。
+> 本文档根据 `Assets/Scripts` 下代码与注释整理，架构图（事件流/存档结构/看板）进行归纳。
 >
 > 代码总体采用 **ScriptableObject 事件通道（Event Channel）** + **Additive Addressables 场景加载** + **ISaveable 存档接口** 的架构。
+>
+> 注：本项目在音乐音效方面有部分没有授权使用素材，严禁商用用途或者传播！
 
 ---
 
@@ -13,7 +15,7 @@
 - **核心循环（从代码推断）**
   - 从 **Menu 场景**进入游戏（Location）。
   - 在 Location 中移动、跳跃、攻击、滑铲；与场景交互物（宝箱、传送点、存档点）互动。
-  - 与敌人（Bee/Boar/Snail）遭遇并战斗；受伤/死亡触发 UI/动画。
+  - 与敌人（Bee/Boar/Snail/SlimeKing）遭遇并战斗；受伤/死亡触发 UI/动画。
   - 通过存档点保存进度，通过加载恢复进度与场景。
 
 ---
@@ -248,6 +250,31 @@
 - `SnailSkillState`
   - 进入时 `hide=true`、触发 `skill` 动画
   - 同时给 `Character.invulnerable = true`，并用 `lostTimeCounter` 作为无敌持续
+
+### 6.6 SlimeKing（史莱姆王 / Boss）
+
+SlimeKing 采用 `Enemy + BaseState` 结构，包含三态：
+
+- `SlimeKingPatrolState`
+  - 巡逻逻辑对齐 `SnailPatrolState`：未发现玩家时移动；遇到悬崖/墙体进入 `wait`，由 `Enemy.TimeCounter()` 负责等待结束后掉头。
+  - 动画参数使用 `walk`（bool），巡逻移动时为 true，等待/停下时为 false。
+
+- `SlimeKingChaseState`
+  - 追击逻辑对齐 Bee 的“发现玩家后追击”的思路：持续刷新 `attacker`、并在丢失目标后倒计时结束切回 Patrol。
+  - 动画参数使用 `chase`（bool），追击时为 true。
+
+- `SlimeKingSkillState`（砸地攻击）
+  - 攻击流程：
+    - 进入 Skill：停止水平速度，触发 `attack`（trigger）。
+    - 起跳：地面时对 `rb` 施加向上冲量（`jumpForce`）。
+    - 落地：检测“曾离地 + 再次接地 + 下落阶段”，落地瞬间启用子物体 `attackHitbox` 一小段时间（`damageWindow`）。
+    - 落地后进入僵直：使用 `Enemy.wait` + `attackStunTime`。
+    - 冷却：额外使用 `attackCooldownCounter` 控制下一次 Skill 的最短间隔。
+
+SlimeKing 特点：
+
+- 本体不挂 `Attack`，不会“碰撞即伤害”，仅在 `attackHitbox` 开启的短窗口造成伤害。
+- 可调参数暴露在 Inspector：`approachDistance/jumpForce/damageWindow/attackStunTime/attackCooldown`。
 
 ---
 
@@ -714,6 +741,8 @@
 - **`PlayerStatBar.cs`**：血条/体力条。
 - **`FadeCanvas.cs`**：画面淡入淡出。
 - **`Menu.cs`**：主菜单按钮选中与退出。
+- **`LightControl.cs`**：Boss 死亡后全局光（`Light2D`）变亮（DOTween）。
+- **`BossBackgroundSwap.cs`**：Boss 死亡后切换背景 `SpriteRenderer.sprite`（可选淡入淡出）。
 
 ### 11.8 `Audio/`（音频）
 
@@ -740,6 +769,8 @@
 - **`DataDefination` 的 ID 生成条件**：当前只判断 `ID == null`，若为空字符串可能无法生成 GUID，可能导致存档 key 冲突。
 
 - **`Attack` 的伤害频率**：`OnTriggerStay2D` 会导致持续扣血；若想“每次挥刀只命中一次”，通常改为 `OnTriggerEnter2D` 或加入命中冷却/已命中集合。
+
+- **Player Build 编译失败（UnityEditor 引用）**：运行时代码（非 Editor 文件夹/非条件编译）不要引用 `UnityEditor` 命名空间，否则打包时会报缺失类型/命名空间（例如 `UnityEditor.FilePathAttribute`）。
 
 - **`GameSceneSO` 的序列化可靠性**：使用 `JsonUtility` 保存 `AssetReference` 有潜在风险。更稳的方式通常是保存 Addressables 的 key/address（字符串）或自定义可序列化结构。
 

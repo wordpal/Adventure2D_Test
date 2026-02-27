@@ -111,6 +111,8 @@ public class UIManager : MonoBehaviour
     private void OnLoadDataEvent()
     {
         gameOverPanel.gameObject.SetActive(false);  //加载场景时保证面板关闭
+        playerStatBar.gameObject.SetActive(true);
+
     }
 
     private void OnSyncVolumeEvent(float amount)

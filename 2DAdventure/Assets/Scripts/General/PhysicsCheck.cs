@@ -55,7 +55,7 @@ public class PhysicsCheck : MonoBehaviour
         if (onWall)
             isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(bottomOffset.x * transform.localScale.x, bottomOffset.y), checkReduis, groundLayer);
         else
-            isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(bottomOffset.x * transform.localScale.x, 0), checkReduis, groundLayer);
+            isGround = Physics2D.OverlapCircle((Vector2)transform.position + new Vector2(bottomOffset.x * transform.localScale.x, bottomOffset.y), checkReduis, groundLayer);
 
 
         touchLeftWall = Physics2D.OverlapCircle((Vector2)transform.position + leftOffset, checkReduis, groundLayer);

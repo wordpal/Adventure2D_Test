@@ -17,6 +17,11 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 226231b4a6ebff646ae0d22beee95d37
   m_SerializeEntries:
+  - m_GUID: 1110eae6189479940bf1bd3c8672bae3
+    m_Address: KingSlime
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3ddd5eabbe261a843b5ec17139d9f001
     m_Address: Snail
     m_ReadOnly: 0

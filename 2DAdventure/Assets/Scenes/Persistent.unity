@@ -343,7 +343,7 @@ Transform:
   m_GameObject: {fileID: 120837630}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.34, y: 0.44, z: 0}
+  m_LocalPosition: {x: 29.9, y: 0.44, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -609,6 +609,18 @@ MonoBehaviour:
       - m_Target: {fileID: 11400000, guid: 1ef81fa5e759eaa4b9a1cc1ce98c0d20, type: 2}
         m_TargetAssemblyTypeName: VoidEventSO, Assembly-CSharp
         m_MethodName: RaiseEvent
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 1429681719}
+        m_TargetAssemblyTypeName: AudioDefination, Assembly-CSharp
+        m_MethodName: PlayAudioClip
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1710,7 +1722,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: -0.05770978, y: 0.00000013753933, z: 0.000000007950615, w: 0.9983334}
-  m_LocalPosition: {x: 0.3399973, y: -0.712272, z: -9.933392}
+  m_LocalPosition: {x: 29.899998, y: -0.712272, z: -9.933392}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2627,7 +2639,7 @@ Transform:
   m_GameObject: {fileID: 968540809}
   serializedVersion: 2
   m_LocalRotation: {x: -0.057709776, y: 0.00000013682919, z: -0.0000000043341286, w: 0.99833345}
-  m_LocalPosition: {x: 0.3399973, y: -0.712272, z: -9.933392}
+  m_LocalPosition: {x: 29.899998, y: -0.712272, z: -9.933392}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3812,6 +3824,7 @@ GameObject:
   - component: {fileID: 1429681718}
   - component: {fileID: 1429681715}
   - component: {fileID: 1429681717}
+  - component: {fileID: 1429681719}
   m_Layer: 0
   m_Name: Audio Manager
   m_TagString: Untagged
@@ -4042,10 +4055,26 @@ MonoBehaviour:
   BGMEvent: {fileID: 11400000, guid: 716955f3c3ba43544a8de62f5e8ef82a, type: 2}
   volumeChangeEvent: {fileID: 11400000, guid: 33df18ad6734c2449b5547080d61ccda, type: 2}
   pauseEvent: {fileID: 11400000, guid: 9a24da6c0cbaf1f4c8c212c18e31e574, type: 2}
+  gameOverEvent: {fileID: 11400000, guid: 1ef81fa5e759eaa4b9a1cc1ce98c0d20, type: 2}
   syncVolumeEvent: {fileID: 11400000, guid: 9af409ee96de5bb46a54235cf42d2791, type: 2}
   Mixer: {fileID: 24100000, guid: 3050e048be9fb5648bd3c9f88fd2de65, type: 2}
   BGMSource: {fileID: 1429681715}
   FXSource: {fileID: 1429681717}
+--- !u!114 &1429681719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429681714}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8176c6dc89ba1764faace37d09dc7eda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playAudioEventSO: {fileID: 11400000, guid: 4f4ccce2ee9994a49818d18c8f78760a, type: 2}
+  audioClip: {fileID: 8300000, guid: 9875b0de2493acc4e8a2fe0734a4c1e2, type: 3}
+  playOnEnable: 0
 --- !u!1 &1447140071
 GameObject:
   m_ObjectHideFlags: 0
